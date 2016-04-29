@@ -6,7 +6,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
 {
-	this->setWindowTitle("Converter");
 	ui->setupUi(this);
 }
 
@@ -32,8 +31,10 @@ void MainWindow::on_pushButton_convToHex_clicked()
 
 void MainWindow::on_pushButton_convTorgb_clicked()
 {
-//	QString rgb = ui->lineEdit_hex->text().trimmed();
-
-//	QString str;
-//	str.sprintf("%02d, %02d, %02d", str);
+	QString rgb = ui->lineEdit_hex->text().trimmed();
+	QColor color(rgb);
+	QPixmap pix(ui->label_outImg2->width(), ui->label_outImg2->height());
+	pix.fill(color);
+	ui->label_outImg2->setPixmap(pix);
+	ui->lineEdit_outHex2->setText(QString("%1, %2, %3").arg(color.red()).arg(color.green()).arg(color.blue()));
 }
