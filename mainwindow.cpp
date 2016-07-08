@@ -5,11 +5,14 @@
 #include <QDesktopWidget>
 #include <QScreen>
 #include <QApplication>
+#include <QTImer>
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
 {
+	setWindowFlags(Qt::FramelessWindowHint);
 	ui->setupUi(this);
+	getRgb();
 }
 
 MainWindow::~MainWindow()
@@ -41,16 +44,17 @@ void MainWindow::on_pushButton_convTorgb_clicked()
 	ui->label_outImg2->setPixmap(pix);
 	ui->lineEdit_outHex2->setText(QString("%1, %2, %3").arg(color.red()).arg(color.green()).arg(color.blue()));
 }
-void MainWindow::mouseMoveEvent(QMouseEvent *)
+void MainWindow::getRgb()
 {
 	QImage image;
 	QPixmap displayPixmap;
 	int x = QCursor::pos().x();
 	int y = QCursor::pos().y();
-	QPixmap pixmap = QScreen::grabWindow(QApplication::desktop()->winId(), x, y, 1, 1);
+	QScreen *screen = QApplication::primaryScreen();
+	QPixmap pixmap = screen->grabWindow(QApplication::desktop()->winId(), x, y, 1, 1);
 	if (!pixmap.isNull()) {
 		image = pixmap.toImage();
-		if (image.valid(1, 1))
+		if (image.valid(0, 0))
 		{
 			QColor color = image.pixel(0, 0);
 			displayPixmap = QPixmap(ui->label_mouseColor->width(), ui->label_mouseColor->height());
@@ -59,4 +63,5 @@ void MainWindow::mouseMoveEvent(QMouseEvent *)
 			ui->lineEdit_mouseColor->setText(QString("%1, %2, %3").arg(color.red()).arg(color.blue()).arg(color.blue()));
 		}
 	}
+	QTimer::singleShot(50, this, SLOT(getRgb()));
 }
