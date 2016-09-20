@@ -20,6 +20,8 @@ private slots:
 
 	void on_pushButton_convTorgb_clicked();
 	void getRgb();
+	void on_pushButton_colorDialog_clicked();
+
 private:
 	Ui::MainWindow *ui;
 };

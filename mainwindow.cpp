@@ -6,6 +6,7 @@
 #include <QScreen>
 #include <QApplication>
 #include <QTImer>
+#include <QColorDialog>
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
@@ -48,22 +49,12 @@ void MainWindow::getRgb()
 	QPixmap pixmap = qApp->primaryScreen()->grabWindow(qApp->desktop()->winId(), QCursor::pos().x(), QCursor::pos().y(), size.width(), size.height());
 	ui->label_mouseColor->setPixmap(pixmap);
 
-//	QImage image;
-//	QPixmap displayPixmap;
-//	int x = QCursor::pos().x();
-//	int y = QCursor::pos().y();
-//	QScreen *screen = QApplication::primaryScreen();
-//	QPixmap pixmap = screen->grabWindow(QApplication::desktop()->winId(), x, y, 1, 1);
-//	if (!pixmap.isNull()) {
-//		image = pixmap.toImage();
-//		if (image.valid(0, 0))
-//		{
-//			QColor color = image.pixel(0, 0);
-//			displayPixmap = QPixmap(ui->label_mouseColor->width(), ui->label_mouseColor->height());
-//			displayPixmap.fill(color);
-//			ui->label_mouseColor->setPixmap(displayPixmap);
-//			ui->lineEdit_mouseColor->setText(QString("%1, %2, %3").arg(color.red()).arg(color.blue()).arg(color.blue()));
-//		}
-//	}
+
 	QTimer::singleShot(100, this, SLOT(getRgb()));
+}
+
+void MainWindow::on_pushButton_colorDialog_clicked()
+{
+	QColor color = QColorDialog::getColor(Qt::white, this);
+
 }
