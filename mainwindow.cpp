@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
 {
-	setWindowFlags(Qt::FramelessWindowHint);
+//    setWindowFlags(Qt::FramelessWindowHint | Qt::Widget);
 	ui->setupUi(this);
 	getRgb();
 }
@@ -46,7 +46,7 @@ void MainWindow::on_pushButton_convTorgb_clicked()
 void MainWindow::getRgb()
 {
 	QSize size = ui->label_mouseColor->size();
-	QPixmap pixmap = qApp->primaryScreen()->grabWindow(qApp->desktop()->winId(), QCursor::pos().x(), QCursor::pos().y(), size.width(), size.height());
+    QPixmap pixmap = qApp->primaryScreen()->grabWindow(qApp->desktop()->winId(), QCursor::pos().x() + 1, QCursor::pos().y() + 1, size.width(), size.height());
 	ui->label_mouseColor->setPixmap(pixmap);
 
 
