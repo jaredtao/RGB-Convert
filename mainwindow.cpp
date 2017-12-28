@@ -5,56 +5,59 @@
 #include <QDesktopWidget>
 #include <QScreen>
 #include <QApplication>
-#include <QTImer>
+#include <QTimer>
+#include <QImage>
 #include <QColorDialog>
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent),
-	ui(new Ui::MainWindow)
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
-//    setWindowFlags(Qt::FramelessWindowHint | Qt::Widget);
-	ui->setupUi(this);
-	getRgb();
+    //    setWindowFlags(Qt::FramelessWindowHint | Qt::Widget);
+    ui->setupUi(this);
+    getRgb();
 }
 MainWindow::~MainWindow()
 {
-	delete ui;
+    delete ui;
 }
 void MainWindow::on_pushButton_convToHex_clicked()
 {
-	int r = ui->lineEdit_r->text().trimmed().toInt();
-	int g = ui->lineEdit_g->text().trimmed().toInt();
-	int b = ui->lineEdit_b->text().trimmed().toInt();
-	QString str;
-	str.sprintf("#%02x%02x%02x", r, g, b);
-	ui->lineEdit_outHex1->setText(str);
+    int r = ui->lineEdit_r->text().trimmed().toInt();
+    int g = ui->lineEdit_g->text().trimmed().toInt();
+    int b = ui->lineEdit_b->text().trimmed().toInt();
+    QString str;
+    str.sprintf("#%02x%02x%02x", r, g, b);
+    ui->lineEdit_outHex1->setText(str);
 
-	QPixmap pix(ui->label_outImg1->width(), ui->label_outImg1->height());
-	pix.fill(QColor(r, g, b));
-	ui->label_outImg1->setPixmap(pix);
+    QPixmap pix(ui->label_outImg1->width(), ui->label_outImg1->height());
+    pix.fill(QColor(r, g, b));
+    ui->label_outImg1->setPixmap(pix);
 
 }
 void MainWindow::on_pushButton_convTorgb_clicked()
 {
-	QString rgb = ui->lineEdit_hex->text().trimmed();
-	QColor color(rgb);
-	QPixmap pix(ui->label_outImg2->width(), ui->label_outImg2->height());
-	pix.fill(color);
-	ui->label_outImg2->setPixmap(pix);
-	ui->lineEdit_outHex2->setText(QString("%1, %2, %3").arg(color.red()).arg(color.green()).arg(color.blue()));
+    QString rgb = ui->lineEdit_hex->text().trimmed();
+    QColor color(rgb);
+    QPixmap pix(ui->label_outImg2->width(), ui->label_outImg2->height());
+    pix.fill(color);
+    ui->label_outImg2->setPixmap(pix);
+    ui->lineEdit_outHex2->setText(QString("%1, %2, %3").arg(color.red()).arg(color.green()).arg(color.blue()));
 }
 
 void MainWindow::getRgb()
 {
-	QSize size = ui->label_mouseColor->size();
+    QSize size = ui->label_mouseColor->size();
     QPixmap pixmap = qApp->primaryScreen()->grabWindow(qApp->desktop()->winId(), QCursor::pos().x() + 1, QCursor::pos().y() + 1, size.width(), size.height());
-	ui->label_mouseColor->setPixmap(pixmap);
+    QColor color = pixmap.toImage().pixelColor(0, 0);
+    ui->lineEdit_mouseColor->setText(color.name());
+    ui->label_mouseColor->setPixmap(pixmap);
 
 
-	QTimer::singleShot(100, this, SLOT(getRgb()));
+    QTimer::singleShot(100, this, SLOT(getRgb()));
 }
 
 void MainWindow::on_pushButton_colorDialog_clicked()
 {
-	QColor color = QColorDialog::getColor(Qt::white, this);
+    QColor color = QColorDialog::getColor(Qt::white, this);
 
 }
